@@ -1,0 +1,15 @@
+.bg-primary {
+  @apply bg-stone-800;
+}
+
+.container {
+  @apply container m-auto;
+}
+
+.link {
+  @apply text-xl px-3 py-1 rounded-lg text-orange-50 hover:text-orange-300 transition-colors;
+
+  &.router-link-active {
+    @apply bg-orange-600 hover:text-orange-50;
+  }
+}
