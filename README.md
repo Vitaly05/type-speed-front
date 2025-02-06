@@ -11,3 +11,6 @@ npm install
 ```sh
 npm run dev
 ```
+
+### Env variables
+- `VITE_API_URL`
