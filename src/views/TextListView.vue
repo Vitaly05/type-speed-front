@@ -1,11 +1,12 @@
 <template>
 	<AppHeader />
 
-	<main class="flex flex-col items-center gap-4">
-		<h1>Home</h1>
+	<main class="main-block bg-primary">
+		<TextList :can-edit="false" />
 	</main>
 </template>
 
 <script setup>
 import AppHeader from '@/components/base/AppHeader.vue'
+import TextList from '@/components/TextList.vue'
 </script>

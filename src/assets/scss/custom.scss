@@ -2,6 +2,10 @@
   @apply bg-stone-800;
 }
 
+.bg-secondary {
+  @apply bg-stone-500;
+}
+
 .container {
   @apply container m-auto;
 }
@@ -12,4 +16,8 @@
   &.router-link-active {
     @apply bg-orange-600 hover:text-orange-50;
   }
+}
+
+.main-block {
+  @apply container m-auto p-10;
 }
