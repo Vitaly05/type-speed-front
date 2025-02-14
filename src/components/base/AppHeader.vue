@@ -21,13 +21,14 @@
 		</div>
 
 		<div v-else class="flex gap-2">
-			<RouterLink to="/">
-				<Button label="Зарегистрироваться" severity="secondary" as="div" />
-			</RouterLink>
+			<Button
+				label="Зарегистрироваться"
+				severity="secondary"
+				as="router-link"
+				:to="{ name: 'registration' }"
+			/>
 
-			<RouterLink to="/">
-				<Button label="Войти" as="div" />
-			</RouterLink>
+			<Button label="Войти" as="router-link" :to="{ name: 'login' }" />
 		</div>
 	</header>
 </template>

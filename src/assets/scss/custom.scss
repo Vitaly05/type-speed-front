@@ -21,3 +21,11 @@
 .main-block {
   @apply container m-auto p-10;
 }
+
+.account-form-card {
+  @apply p-8 bg-stone-700 rounded-lg w-100;
+
+  .account-form {
+    @apply flex flex-col gap-5;
+  }
+}

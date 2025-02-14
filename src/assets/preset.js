@@ -7,23 +7,23 @@ const MyPreset = definePreset(Aura, {
 			colorScheme: {
 				dark: {
 					primary: {
-						background: '{orange.500}',
+						background: '{orange:500}',
 						color: '{orange:50}',
 						border: {
-							color: '{orange.500}',
+							color: '{orange:500}',
 						},
 						hover: {
-							background: '{orange.600}',
+							background: '{orange:600}',
 							color: '{orange:50}',
 							border: {
-								color: '{orange.600}',
+								color: '{orange:600}',
 							},
 						},
 						active: {
-							background: '{orange.700}',
+							background: '{orange:700}',
 							color: '{orange:50}',
 							border: {
-								color: '{orange.700}',
+								color: '{orange:700}',
 							},
 						},
 					},
@@ -55,18 +55,41 @@ const MyPreset = definePreset(Aura, {
 							color: '{red:600}',
 						},
 						hover: {
-							background: '{red.700}',
+							background: '{red:700}',
 							color: '{orange:50}',
 							border: {
-								color: '{red.700}',
+								color: '{red:700}',
 							},
 						},
 						active: {
-							background: '{red.800}',
+							background: '{red:800}',
 							color: '{orange:50}',
 							border: {
-								color: '{red.800}',
+								color: '{red:800}',
 							},
+						},
+					},
+					outlined: {
+						primary: {
+							color: '{orange:400}',
+							border: {
+								color: '{orange:400}',
+							},
+							hover: {
+								background: 'rgba(255,255,255,0.05)',
+							},
+							active: {
+								background: 'rgba(255,255,255,0.1)',
+							},
+						},
+					},
+					link: {
+						color: '{orange:400}',
+						hover: {
+							color: '{orange:500}',
+						},
+						active: {
+							color: '{orange:600}',
 						},
 					},
 				},
@@ -84,6 +107,43 @@ const MyPreset = definePreset(Aura, {
 						background: '{stone:900}',
 					},
 				},
+			},
+		},
+		inputtext: {
+			background: '{stone:700}',
+			color: '{orange:50}',
+			border: {
+				color: '{stone:900}',
+			},
+			hover: {
+				border: {
+					color: '{orange:600}',
+				},
+			},
+			focus: {
+				border: {
+					color: '{orange:400}',
+				},
+			},
+		},
+		floatlabel: {
+			color: '{orange:50}',
+			focus: {
+				color: '{orange:400}',
+			},
+			active: {
+				color: '{orange:50}',
+			},
+			invalid: {
+				color: '{red:500}',
+			},
+			on: {
+				active: {
+					background: '{stone:700}',
+				},
+			},
+			font: {
+				weight: 400,
 			},
 		},
 	},
