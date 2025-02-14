@@ -16,8 +16,8 @@
 			<RouterLink to="/ff" class="link">Рейтинг пользователей</RouterLink>
 		</div>
 
-		<div v-if="isAuthenticated">
-			<Button label="Выйти" severity="secondary" as="div" />
+		<div v-if="authStore.isAuthenticated">
+			<Button label="Выйти" severity="secondary" as="div" @click="logout" />
 		</div>
 
 		<div v-else class="flex gap-2">
@@ -34,9 +34,31 @@
 </template>
 
 <script setup>
-import { Button } from 'primevue'
+import { Button, useConfirm, useToast } from 'primevue'
 import LogoIcon from '@/components/icons/LogoIcon.vue'
-import { ref } from 'vue'
+import { useAuthStore } from '@/stores/authStore.js'
 
-const isAuthenticated = ref(false)
+const confirm = useConfirm()
+const toast = useToast()
+const authStore = useAuthStore()
+
+const logout = (e) => {
+	confirm.require({
+		target: e.currentTarget,
+		message: 'Вы уверены, что хотите выйти из аккаунта?',
+		icon: 'pi pi-exclamation-triangle',
+		rejectProps: {
+			label: 'Отмена',
+			severity: 'secondary',
+		},
+		acceptProps: {
+			label: 'Выйти',
+			severity: 'danger',
+		},
+		accept: () => {
+			authStore.clearAccessToken()
+			toast.add({ summary: 'Вы вышли из аккаунта', severity: 'success', life: 5000 })
+		},
+	})
+}
 </script>

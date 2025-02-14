@@ -30,11 +30,13 @@
 					</FloatLabel>
 
 					<Message
-						v-if="$form.email?.invalid"
+						v-if="$form.email?.invalid || !!errorsFromApi.email"
 						severity="error"
 						size="small"
 						variant="simple"
-						>{{ $form.email.error?.message }}
+					>
+						{{ $form.email.error?.message }}
+						{{ errorsFromApi.email }}
 					</Message>
 				</div>
 
@@ -45,11 +47,13 @@
 					</FloatLabel>
 
 					<Message
-						v-if="$form.username?.invalid"
+						v-if="$form.username?.invalid || !!errorsFromApi.username"
 						severity="error"
 						size="small"
 						variant="simple"
-						>{{ $form.username.error?.message }}
+					>
+						{{ $form.username.error?.message }}
+						{{ errorsFromApi.username }}
 					</Message>
 				</div>
 
@@ -91,13 +95,26 @@
 
 <script setup>
 import { Form } from '@primevue/forms'
-import { InputText, FloatLabel, Message, Button } from 'primevue'
-import { reactive, ref } from 'vue'
+import { InputText, FloatLabel, Message, Button, useToast } from 'primevue'
+import { onMounted, reactive, ref } from 'vue'
 import { validateEmail, validatePassword, validateUsername } from '@/helpers/validationHelper.js'
+import { apiRegister } from '@/api.js'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore.js'
+
+const toast = useToast()
+const router = useRouter()
+const authStore = useAuthStore()
 
 const isLoading = ref(false)
 
 const initialValues = reactive({
+	email: '',
+	username: '',
+	password: '',
+})
+
+const errorsFromApi = reactive({
 	email: '',
 	username: '',
 	password: '',
@@ -129,12 +146,67 @@ const resolver = ({ values }) => {
 	}
 }
 
-const onSubmit = (form) => {
+const onSubmit = async (form) => {
 	if (!form.valid) {
 		return
 	}
 
-	console.log(form.states.username.value)
-	console.log(form.states.password.value)
+	clearApiErrors()
+
+	const data = {
+		email: form.states.email.value,
+		name: form.states.username.value,
+		password: form.states.password.value,
+	}
+
+	isLoading.value = true
+
+	const response = await apiRegister(data)
+
+	isLoading.value = false
+
+	if (!response) {
+		toast.add({ summary: 'Произошла неизвестная ошибка', severity: 'error', life: 5000 })
+		return
+	}
+
+	if (!response.success && response.messages) {
+		if (response.messages.email) {
+			errorsFromApi.email =
+				response.messages.email[0] === 'The email has already been taken.'
+					? 'Данная почта уже используется.'
+					: ''
+		}
+
+		if (response.messages.name) {
+			errorsFromApi.username =
+				response.messages.name[0] === 'The name has already been taken.'
+					? 'Данное имя пользователя уже используется.'
+					: ''
+		}
+	}
+
+	if (!response.access_token) {
+		toast.add({ summary: 'Произошла неизвестная ошибка', severity: 'error', life: 5000 })
+		return
+	}
+
+	authStore.setAccessToken(response.access_token)
+
+	toast.add({ summary: 'Аккаунт успешно создан', severity: 'success', life: 5000 })
+
+	router.push({ name: 'home' })
 }
+
+function clearApiErrors() {
+	errorsFromApi.email = ''
+	errorsFromApi.username = ''
+	errorsFromApi.password = ''
+}
+
+onMounted(() => {
+	if (authStore.isAuthenticated) {
+		router.push({ name: 'home' })
+	}
+})
 </script>

@@ -1,8 +1,8 @@
 const validationMessages = {
-	required: 'Это поле является обязательным',
-	minMaxLength: (min, max) => `Поле должно содержать от ${min} до ${max} символов`,
-	invalidEmail: 'Неправильный формат почты',
-	invalidCharacters: 'Вы ввели недопустимые символы',
+	required: 'Это поле является обязательным.',
+	minMaxLength: (min, max) => `Поле должно содержать от ${min} до ${max} символов.`,
+	invalidEmail: 'Неправильный формат почты.',
+	invalidCharacters: 'Вы ввели недопустимые символы.',
 }
 
 const usernameRegex = /^[A-Za-zА-Яа-я0-9_-]+$/

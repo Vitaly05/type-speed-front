@@ -79,9 +79,16 @@
 
 <script setup>
 import { Form } from '@primevue/forms'
-import { InputText, Message, Button, FloatLabel } from 'primevue'
-import { reactive, ref } from 'vue'
+import { InputText, Message, Button, FloatLabel, useToast } from 'primevue'
+import { onMounted, reactive, ref } from 'vue'
 import { validateEmail, validatePassword, validateUsername } from '@/helpers/validationHelper.js'
+import { apiLoginByEmail, apiLoginByName } from '@/api.js'
+import { useAuthStore } from '@/stores/authStore.js'
+import { useRouter } from 'vue-router'
+
+const toast = useToast()
+const router = useRouter()
+const authStore = useAuthStore()
 
 const isLoading = ref(false)
 
@@ -112,12 +119,52 @@ const resolver = ({ values }) => {
 	}
 }
 
-const onSubmit = (form) => {
+const onSubmit = async (form) => {
 	if (!form.valid) {
 		return
 	}
 
-	console.log(form.states.username.value)
-	console.log(form.states.password.value)
+	const data = {
+		email: form.states.username.value,
+		name: form.states.username.value,
+		password: form.states.password.value,
+	}
+
+	isLoading.value = true
+
+	const response = form.states.username.value.includes('@')
+		? await apiLoginByEmail(data)
+		: await apiLoginByName(data)
+
+	isLoading.value = false
+
+	if (!response) {
+		toast.add({ summary: 'Произошла неизвестная ошибка', severity: 'error', life: 5000 })
+		return
+	}
+
+	if (!response.success) {
+		if (response.message === 'Invalid credentials') {
+			toast.add({ summary: 'Неверные данные для входа', severity: 'error', life: 5000 })
+			return
+		}
+	}
+
+	if (!response.access_token) {
+		toast.add({ summary: 'Произошла неизвестная ошибка', severity: 'error', life: 5000 })
+		return
+	}
+
+	authStore.setAccessToken(response.access_token)
+
+	toast.add({ summary: 'Вы успешно вошли в аккаунт', severity: 'success', life: 5000 })
+
+	router.push({ name: 'home' })
 }
+
+onMounted(() => {
+	if (authStore.isAuthenticated) {
+		router.push({ name: 'home' })
+	}
+})
 </script>

@@ -7,14 +7,57 @@ const instance = axios.create({
 	},
 })
 
-async function fetchTest() {
-	try {
-		const response = await instance.get('test')
+instance.interceptors.response.use(
+	(response) => {
+		return response
+	},
+	(error) => {
+		if (error.response && error.response.status === 422) {
+			return Promise.resolve(error.response)
+		}
 
-		console.log(response.data)
+		return Promise.reject(error)
+	},
+)
+
+async function apiRegister({ email, name, password }) {
+	try {
+		const response = await instance.post('auth/register', {
+			email: email,
+			name: name,
+			password: password,
+		})
+
+		return response.data
 	} catch (e) {
 		console.error(e.message)
 	}
 }
 
-export { fetchTest }
+async function apiLoginByEmail({ email, password }) {
+	try {
+		const response = await instance.post('auth/login-email', {
+			email: email,
+			password: password,
+		})
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+async function apiLoginByName({ name, password }) {
+	try {
+		const response = await instance.post('auth/login-name', {
+			name: name,
+			password: password,
+		})
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+export { apiRegister, apiLoginByEmail, apiLoginByName }
