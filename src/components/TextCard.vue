@@ -5,8 +5,13 @@
 		<div class="flex flex-col text-sm">
 			<span>Слов: {{ data?.words_count }}</span>
 			<span>Символов: {{ data?.symbols_count }}</span>
-			<span>Рекорд: XXX</span>
-			<span>Пройдено раз (вы/все): XXX</span>
+			<span>Рекорд: {{ record(data) }}</span>
+			<span>
+				Пройдено раз (вы/все):
+				{{ dashOrValue(data.completed.by_user) }}/{{
+					dashOrValue(data.completed.by_others)
+				}}
+			</span>
 		</div>
 
 		<div class="flex flex-row-reverse justify-between gap-4 mt-2">
@@ -22,6 +27,8 @@
 
 <script setup>
 import { Button } from 'primevue'
+import { computed } from 'vue'
+import { useSettingsStore } from '@/stores/settingsStore.js'
 
 defineProps({
 	canEdit: {
@@ -33,4 +40,25 @@ defineProps({
 		default: null,
 	},
 })
+
+const settingsStore = useSettingsStore()
+
+const record = (item) =>
+	computed(() => {
+		switch (settingsStore.progressFormat) {
+			case settingsStore.progressFormats.symbolsPerMinute:
+				return `${dashOrValue(item?.record.symbols)} (симв/мин)`
+			case settingsStore.progressFormats.wordsPerMinute:
+				return `${dashOrValue(item?.record.words)} (слов/мин)`
+			case settingsStore.progressFormats.both:
+			default:
+				if (!item?.record.symbols && !item?.record.words) {
+					return '-'
+				}
+
+				return `${dashOrValue(item?.record.symbols)} (симв/мин) / ${dashOrValue(item?.record.words)} (слов/мин)`
+		}
+	})
+
+const dashOrValue = (value) => (!value || value === 0 ? '-' : value)
 </script>
