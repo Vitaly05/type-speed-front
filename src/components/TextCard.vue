@@ -1,10 +1,10 @@
 <template>
 	<div class="bg-secondary p-5 rounded-lg flex flex-col gap-3">
-		<h2 class="text-2xl">Название текста</h2>
+		<h2 class="text-2xl">{{ data?.title }}</h2>
 
 		<div class="flex flex-col text-sm">
-			<span>Слов: XXX</span>
-			<span>Символов: XXX</span>
+			<span>Слов: {{ data?.words_count }}</span>
+			<span>Символов: {{ data?.symbols_count }}</span>
 			<span>Рекорд: XXX</span>
 			<span>Пройдено раз (вы/все): XXX</span>
 		</div>
@@ -27,6 +27,10 @@ defineProps({
 	canEdit: {
 		type: Boolean,
 		default: false,
+	},
+	data: {
+		type: Object,
+		default: null,
 	},
 })
 </script>

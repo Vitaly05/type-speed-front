@@ -81,4 +81,14 @@ async function apiLoginByName({ name, password }) {
 	}
 }
 
-export { apiRegister, apiLoginByEmail, apiLoginByName }
+async function apiGetAllTexts({ page = 1 }) {
+	try {
+		const response = await instance.get(`text/all?page=${page}`)
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+export { apiRegister, apiLoginByEmail, apiLoginByName, apiGetAllTexts }
