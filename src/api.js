@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useAuthStore } from '@/stores/authStore.js'
 
 const instance = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
@@ -7,11 +8,31 @@ const instance = axios.create({
 	},
 })
 
+instance.interceptors.request.use(
+	function (config) {
+		const authStore = useAuthStore()
+
+		if (authStore.isAuthenticated) {
+			config.headers.Authorization = `Bearer ${authStore.accessToken}`
+		}
+
+		return config
+	},
+	function (error) {
+		return Promise.reject(error)
+	},
+)
+
 instance.interceptors.response.use(
 	(response) => {
 		return response
 	},
 	(error) => {
+		if (error.response && error.response.status === 401) {
+			const authStore = useAuthStore()
+			authStore.clearAccessToken()
+		}
+
 		if (error.response && error.response.status === 422) {
 			return Promise.resolve(error.response)
 		}
