@@ -91,4 +91,59 @@ async function apiGetAllTexts({ page = 1 }) {
 	}
 }
 
-export { apiRegister, apiLoginByEmail, apiLoginByName, apiGetAllTexts }
+async function apiGetMyTexts({ page = 1 }) {
+	try {
+		const response = await instance.get(`text/all-my?page=${page}`)
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+async function apiDeleteText({ id }) {
+	try {
+		const response = await instance.delete(`text/${id}/delete`)
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+async function apiCreateText({ title, text }) {
+	try {
+		const response = await instance.post(`text/create`, {
+			title: title,
+			text: text,
+		})
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+async function apiEditText({ id, title, text }) {
+	try {
+		const response = await instance.post(`text/${id}/edit`, {
+			title: title,
+			text: text,
+		})
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+export {
+	apiRegister,
+	apiLoginByEmail,
+	apiLoginByName,
+	apiGetAllTexts,
+	apiGetMyTexts,
+	apiDeleteText,
+	apiCreateText,
+	apiEditText,
+}

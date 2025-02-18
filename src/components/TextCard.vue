@@ -18,19 +18,31 @@
 			<Button label="Пройти" />
 
 			<div v-if="canEdit" class="flex gap-4">
-				<Button label="Удалить" severity="danger" icon="pi pi-trash" />
-				<Button label="Редактировать" severity="secondary" icon="pi pi-pencil" />
+				<Button
+					label="Удалить"
+					severity="danger"
+					icon="pi pi-trash"
+					:loading="isDeleteButtonLoading"
+					@click="onDeleteClick"
+				/>
+				<Button
+					label="Редактировать"
+					severity="secondary"
+					icon="pi pi-pencil"
+					@click="onEditClick"
+				/>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { Button } from 'primevue'
-import { computed } from 'vue'
+import { Button, useConfirm, useToast } from 'primevue'
+import { computed, ref } from 'vue'
 import { useSettingsStore } from '@/stores/settingsStore.js'
+import { apiDeleteText } from '@/api.js'
 
-defineProps({
+const props = defineProps({
 	canEdit: {
 		type: Boolean,
 		default: false,
@@ -41,7 +53,13 @@ defineProps({
 	},
 })
 
+const emit = defineEmits(['delete', 'edit'])
+
+const toast = useToast()
+const confirm = useConfirm()
 const settingsStore = useSettingsStore()
+
+const isDeleteButtonLoading = ref(false)
 
 const record = (item) =>
 	computed(() => {
@@ -61,4 +79,43 @@ const record = (item) =>
 	})
 
 const dashOrValue = (value) => (!value || value === 0 ? '-' : value)
+
+function onEditClick() {
+	emit('edit', props.data)
+}
+
+function onDeleteClick(e) {
+	if (!props.canEdit) {
+		return
+	}
+
+	confirm.require({
+		target: e.currentTarget,
+		message: 'Вы уверены, что хотите удалить этот текст?',
+		icon: 'pi pi-exclamation-triangle',
+		rejectProps: {
+			label: 'Отмена',
+			severity: 'secondary',
+		},
+		acceptProps: {
+			label: 'Удалить',
+			severity: 'danger',
+		},
+		accept: async () => {
+			isDeleteButtonLoading.value = true
+
+			const response = await apiDeleteText({ id: props.data.id })
+
+			if (response?.success) {
+				toast.add({ summary: 'Текст удалён', severity: 'success', life: 5000 })
+
+				emit('delete', props.data.id)
+			} else {
+				toast.add({ summary: 'Не удалось удалить текст', severity: 'error', life: 5000 })
+			}
+
+			isDeleteButtonLoading.value = false
+		},
+	})
+}
 </script>

@@ -8,6 +8,9 @@ const validationMessages = {
 const usernameRegex = /^[A-Za-zА-Яа-я0-9_-]+$/
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const passwordRegex = /^[A-Za-z0-9!@#$%^&*()_+=\-[\]{};':"\\|,.<>/?]+$/
+const textTitleRegex = /^[a-zA-Zа-яА-Я0-9\s'-]+$/
+const textTextRegex = /^[a-zA-Zа-яА-Я0-9\s.,!?:;]+$/
+const textTextInvalidSymbolsRegex = /[^a-zA-Zа-яА-Я0-9\s.,!?:;]/g
 
 function validateUsername(value) {
 	if (!value.length) {
@@ -53,4 +56,44 @@ function validatePassword(value) {
 	return null
 }
 
-export { validationMessages, validateUsername, validateEmail, validatePassword }
+function validateTextTitle(value) {
+	if (!value.length) {
+		return validationMessages.required
+	}
+
+	if (!textTitleRegex.test(value)) {
+		return validationMessages.invalidCharacters
+	}
+
+	if (value.length < 4 || value.length > 255) {
+		return validationMessages.minMaxLength(4, 255)
+	}
+
+	return null
+}
+
+function validateTextText(value) {
+	if (!value.length) {
+		return validationMessages.required
+	}
+
+	if (!textTextRegex.test(value)) {
+		return validationMessages.invalidCharacters
+	}
+
+	if (value.length < 20 || value.length > 65535) {
+		return validationMessages.minMaxLength(20, 65535)
+	}
+
+	return null
+}
+
+export {
+	validationMessages,
+	textTextInvalidSymbolsRegex,
+	validateUsername,
+	validateEmail,
+	validatePassword,
+	validateTextTitle,
+	validateTextText,
+}

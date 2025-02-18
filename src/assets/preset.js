@@ -126,6 +126,23 @@ const MyPreset = definePreset(Aura, {
 				},
 			},
 		},
+		textarea: {
+			background: '{stone:700}',
+			color: '{orange:50}',
+			border: {
+				color: '{stone:900}',
+			},
+			hover: {
+				border: {
+					color: '{orange:600}',
+				},
+			},
+			focus: {
+				border: {
+					color: '{orange:400}',
+				},
+			},
+		},
 		floatlabel: {
 			color: '{orange:50}',
 			focus: {
@@ -144,6 +161,14 @@ const MyPreset = definePreset(Aura, {
 			},
 			font: {
 				weight: 400,
+			},
+		},
+		dialog: {
+			background: '{stone:700}',
+		},
+		stepper: {
+			steppanel: {
+				background: '{stone:700}',
 			},
 		},
 	},

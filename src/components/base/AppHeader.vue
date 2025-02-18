@@ -9,9 +9,9 @@
 		</div>
 
 		<div class="flex gap-4">
-			<RouterLink to="/" class="link">Список текстов</RouterLink>
+			<RouterLink :to="{ name: 'home' }" class="link">Список текстов</RouterLink>
 
-			<RouterLink to="/f" class="link">Мои текста</RouterLink>
+			<RouterLink :to="{ name: 'my-texts' }" class="link">Мои текста</RouterLink>
 
 			<RouterLink to="/ff" class="link">Рейтинг пользователей</RouterLink>
 		</div>

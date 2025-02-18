@@ -1,6 +1,6 @@
 <template>
 	<div v-if="canEdit" class="flex justify-center mb-10">
-		<Button label="Добавить текст" icon="pi pi-plus" />
+		<Button label="Добавить текст" icon="pi pi-plus" @click="onCreateClick" />
 	</div>
 
 	<div v-if="!textsData || textsData.data.length === 0" class="text-center text-xl">
@@ -14,6 +14,8 @@
 				:key="data.id"
 				:data="data"
 				:can-edit="canEdit"
+				@delete="onTextDelete"
+				@edit="onTextEditClick"
 			/>
 		</div>
 
@@ -25,14 +27,22 @@
 			@page="onPageChange"
 		/>
 	</div>
+
+	<EditTextModal
+		v-if="canEdit"
+		v-model="showEditModal"
+		:text-data="editedTextData"
+		@save="onTextSave"
+	/>
 </template>
 
 <script setup>
 import TextCard from '@/components/TextCard.vue'
 import { Button, Paginator } from 'primevue'
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
+import EditTextModal from '@/components/EditTextModal.vue'
 
-const emit = defineEmits(['page-changed'])
+const emit = defineEmits(['page-changed', 'text-deleted', 'text-saved'])
 
 const props = defineProps({
 	canEdit: {
@@ -46,6 +56,12 @@ const props = defineProps({
 })
 
 const lastPage = ref(props.textsData.meta.current_page - 1)
+const showEditModal = ref(false)
+const editedTextData = ref(null)
+
+watchEffect(() => {
+	lastPage.value = props.textsData.meta.current_page - 1
+})
 
 function onPageChange(pageState) {
 	const page = pageState.page
@@ -55,5 +71,25 @@ function onPageChange(pageState) {
 
 		emit('page-changed', page + 1)
 	}
+}
+
+function onTextDelete(textId) {
+	emit('text-deleted', textId)
+}
+
+function onCreateClick() {
+	editedTextData.value = null
+	showEditModal.value = true
+}
+
+function onTextSave(isNewText) {
+	showEditModal.value = false
+
+	emit('text-saved', isNewText)
+}
+
+function onTextEditClick(text) {
+	editedTextData.value = text
+	showEditModal.value = true
 }
 </script>

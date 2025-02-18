@@ -2,9 +2,8 @@
 	<AppHeader />
 
 	<main class="main-block bg-primary">
-		<div v-if="textsData?.meta.total !== 0" class="flex items-center mb-5" style="height: 50px">
+		<div v-if="isLoading" class="flex items-center mb-5">
 			<ProgressSpinner
-				v-if="isLoading"
 				style="width: 50px; height: 50px"
 				strokeWidth="6"
 				fill="transparent"
