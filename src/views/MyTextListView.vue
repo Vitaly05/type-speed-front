@@ -2,24 +2,30 @@
 	<AppHeader />
 
 	<main class="main-block bg-primary">
-		<div v-if="isLoading" class="flex items-center mb-5">
-			<ProgressSpinner
-				style="width: 50px; height: 50px"
-				strokeWidth="6"
-				fill="transparent"
-				animationDuration="1s"
-				aria-label="Загрузка"
+		<div v-if="authStore.isAuthenticated">
+			<div v-if="isLoading" class="flex items-center mb-5">
+				<ProgressSpinner
+					style="width: 50px; height: 50px"
+					strokeWidth="6"
+					fill="transparent"
+					animationDuration="1s"
+					aria-label="Загрузка"
+				/>
+			</div>
+
+			<TextList
+				v-if="textsData"
+				:can-edit="true"
+				:texts-data="textsData"
+				@page-changed="onPageChanged"
+				@text-deleted="onTextDeleted"
+				@text-saved="onTextSaved"
 			/>
 		</div>
 
-		<TextList
-			v-if="textsData"
-			:can-edit="true"
-			:texts-data="textsData"
-			@page-changed="onPageChanged"
-			@text-deleted="onTextDeleted"
-			@text-saved="onTextSaved"
-		/>
+		<div v-else class="text-center text-xl">
+			Войдите в аккаунт, чтобы создавать свои текста
+		</div>
 	</main>
 </template>
 
@@ -29,6 +35,9 @@ import TextList from '@/components/TextList.vue'
 import { onMounted, ref } from 'vue'
 import { apiGetMyTexts } from '@/api.js'
 import { ProgressSpinner } from 'primevue'
+import { useAuthStore } from '@/stores/authStore.js'
+
+const authStore = useAuthStore()
 
 const textsData = ref(null)
 const isLoading = ref(true)
