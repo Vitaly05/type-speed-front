@@ -29,3 +29,47 @@
     @apply flex flex-col gap-5;
   }
 }
+
+.words-panel {
+  @apply w-1/2 max-h-50 flex gap-x-2 p-5 rounded bg-stone-700 border-1 border-orange-50 text-lg select-none overflow-hidden;
+
+  .current-word,
+  .pending-word,
+  .done-word {
+    //height: min-content;
+  }
+
+  .p-virtualscroller-content {
+    //apply: flex flex-wrap gap-x-2 p-5;
+  }
+
+  .done-word {
+    @apply text-green-300;
+
+    .error-symbol {
+      @apply text-red-400;
+    }
+  }
+
+  .current-word {
+    @apply text-orange-300;
+  }
+
+  .pending-word {
+    @apply text-stone-400;
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+.results-panel {
+  b {
+    @apply text-orange-400;
+  }
+}

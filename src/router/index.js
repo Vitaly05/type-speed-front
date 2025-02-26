@@ -24,6 +24,11 @@ const router = createRouter({
 			name: 'my-texts',
 			component: () => import('../views/MyTextListView.vue'),
 		},
+		{
+			path: '/text/:id',
+			name: 'text',
+			component: () => import('../views/TextView.vue'),
+		},
 	],
 })
 

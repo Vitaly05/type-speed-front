@@ -15,7 +15,11 @@
 		</div>
 
 		<div class="flex flex-row-reverse justify-between gap-4 mt-2">
-			<Button label="Пройти" />
+			<Button
+				label="Пройти"
+				as="router-link"
+				:to="{ name: 'text', params: { id: data.id } }"
+			/>
 
 			<div v-if="canEdit" class="flex gap-4">
 				<Button

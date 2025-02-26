@@ -137,6 +137,38 @@ async function apiEditText({ id, title, text }) {
 	}
 }
 
+async function apiGetText({ id }) {
+	try {
+		const response = await instance.get(`text/get/${id}`)
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+async function apiSaveTestResult({
+	textId,
+	secondsElapsed,
+	mistakesCount,
+	wordsPerMinute,
+	symbolsPerMinute,
+}) {
+	try {
+		const response = await instance.post('text-progress/save/', {
+			text_id: textId,
+			seconds_elapsed: secondsElapsed,
+			mistakes_count: mistakesCount,
+			words_per_minute: wordsPerMinute,
+			symbols_per_minute: symbolsPerMinute,
+		})
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
 export {
 	apiRegister,
 	apiLoginByEmail,
@@ -146,4 +178,6 @@ export {
 	apiDeleteText,
 	apiCreateText,
 	apiEditText,
+	apiGetText,
+	apiSaveTestResult,
 }
