@@ -34,12 +34,13 @@
 </template>
 
 <script setup>
-import { Button, useConfirm, useToast } from 'primevue'
+import { Button, useConfirm } from 'primevue'
 import LogoIcon from '@/components/icons/LogoIcon.vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore.js'
 
 const confirm = useConfirm()
-const toast = useToast()
+const router = useRouter()
 const authStore = useAuthStore()
 
 const logout = (e) => {
@@ -56,8 +57,7 @@ const logout = (e) => {
 			severity: 'danger',
 		},
 		accept: () => {
-			authStore.clearAccessToken()
-			toast.add({ summary: 'Вы вышли из аккаунта', severity: 'success', life: 5000 })
+			router.push({ name: 'logout' })
 		},
 	})
 }
