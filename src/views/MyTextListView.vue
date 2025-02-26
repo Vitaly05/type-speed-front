@@ -23,9 +23,7 @@
 			/>
 		</div>
 
-		<div v-else class="text-center text-xl">
-			Войдите в аккаунт, чтобы создавать свои текста
-		</div>
+		<div v-else class="text-center text-xl">Войдите в аккаунт, чтобы создавать свои текста</div>
 	</main>
 </template>
 
@@ -44,6 +42,10 @@ const isLoading = ref(true)
 const currentPage = ref(0)
 
 onMounted(async () => {
+	if (!authStore.isAuthenticated) {
+		return
+	}
+
 	isLoading.value = true
 
 	textsData.value = await apiGetMyTexts({ page: 1 })

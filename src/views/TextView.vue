@@ -109,7 +109,7 @@
 
 <script setup>
 import AppHeader from '@/components/base/AppHeader.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { nextTick, ref, watchEffect } from 'vue'
 import { apiGetText } from '@/api.js'
 import { useToast, ProgressSpinner, InputText, Message, RadioButton } from 'primevue'
@@ -117,6 +117,7 @@ import TestResultModal from '@/components/TestResultModal.vue'
 import TimerStopwatch from '@/components/TimerStopwatch.vue'
 
 const route = useRoute()
+const router = useRouter()
 const toast = useToast()
 
 const isLoading = ref(false)
@@ -146,6 +147,7 @@ watchEffect(async () => {
 
 		wordsArray.value = response.text.split(' ')
 	} else {
+		router.push({ name: '404' })
 		toast.add({ summary: 'Не удалось найти текст', severity: 'error', life: 5000 })
 	}
 
