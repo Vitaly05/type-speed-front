@@ -1,108 +1,115 @@
 <template>
 	<AppHeader />
 
-	<main class="main-block bg-primary">
-		<div v-if="isLoading" class="flex items-center">
-			<ProgressSpinner
-				style="width: 50px; height: 50px"
-				strokeWidth="6"
-				fill="transparent"
-				animationDuration="1s"
-				aria-label="Загрузка"
-			/>
-		</div>
+	<main>
+		<div class="main-block bg-primary border-b border-orange-50">
+			<div v-if="isLoading" class="flex items-center">
+				<ProgressSpinner
+					style="width: 50px; height: 50px"
+					strokeWidth="6"
+					fill="transparent"
+					animationDuration="1s"
+					aria-label="Загрузка"
+				/>
+			</div>
 
-		<div v-else class="flex flex-col items-center justify-center gap-10">
-			<div class="flex gap-5">
-				<span>Тип теста:</span>
+			<div v-else class="flex flex-col items-center justify-center gap-10">
+				<div class="flex gap-5">
+					<span>Тип теста:</span>
 
-				<div class="flex flex-wrap gap-4">
-					<div class="flex items-center gap-2">
-						<RadioButton
-							v-model="selectedTestType"
-							input-id="selectedType1"
-							value="one-minute"
-							:disabled="isTestRunning"
-						/>
+					<div class="flex flex-wrap gap-4">
+						<div class="flex items-center gap-2">
+							<RadioButton
+								v-model="selectedTestType"
+								input-id="selectedType1"
+								value="one-minute"
+								:disabled="isTestRunning"
+							/>
 
-						<label
-							for="selectedType1"
-							:class="`${isTestRunning ? '' : 'cursor-pointer'}`"
-						>
-							За минуту
-						</label>
-					</div>
+							<label
+								for="selectedType1"
+								:class="`${isTestRunning ? '' : 'cursor-pointer'}`"
+							>
+								За минуту
+							</label>
+						</div>
 
-					<div class="flex items-center gap-2">
-						<RadioButton
-							v-model="selectedTestType"
-							input-id="selectedType2"
-							value="full-text"
-							:disabled="isTestRunning"
-						/>
+						<div class="flex items-center gap-2">
+							<RadioButton
+								v-model="selectedTestType"
+								input-id="selectedType2"
+								value="full-text"
+								:disabled="isTestRunning"
+							/>
 
-						<label
-							for="selectedType2"
-							:class="`${isTestRunning ? '' : 'cursor-pointer'}`"
-						>
-							Весь текст
-						</label>
+							<label
+								for="selectedType2"
+								:class="`${isTestRunning ? '' : 'cursor-pointer'}`"
+							>
+								Весь текст
+							</label>
+						</div>
 					</div>
 				</div>
-			</div>
 
-			<TimerStopwatch
-				ref="timerStopwatchRef"
-				:type="selectedTestType"
-				@time-out="finishTest"
-			/>
-
-			<div class="words-panel" ref="virtualScrollerRef">
-				<template v-for="(word, index) in wordsArray" :key="word.id">
-					<span
-						v-if="isWordVisible(Math.floor(index / optimizeStepLength))"
-						:class="getWorldClass(index)"
-						:ref="setItemRef"
-						:id="`word-${index}`"
-					>
-						<span
-							v-for="(symbol, symbolIndex) in word"
-							:key="symbolIndex"
-							:class="getSymbolClass(index, symbolIndex)"
-						>
-							{{ symbol }}
-						</span>
-					</span>
-				</template>
-			</div>
-
-			<div class="flex flex-col gap-3 items-center">
-				<InputText
-					v-model="currentEnteredWord"
-					class="w-[400px]"
-					:disabled="isTestFinished"
-					@focus="onInputFocus"
-					@keydown="onTextKeyDown"
-					@input="onTextInput"
+				<TimerStopwatch
+					ref="timerStopwatchRef"
+					:type="selectedTestType"
+					@time-out="finishTest"
 				/>
 
-				<Message size="small" variant="simple">Пробел - подтвердить слово</Message>
+				<div class="words-panel" ref="virtualScrollerRef">
+					<template v-for="(word, index) in wordsArray" :key="word.id">
+						<span
+							v-if="isWordVisible(Math.floor(index / optimizeStepLength))"
+							:class="getWorldClass(index)"
+							:ref="setItemRef"
+							:id="`word-${index}`"
+						>
+							<span
+								v-for="(symbol, symbolIndex) in word"
+								:key="symbolIndex"
+								:class="getSymbolClass(index, symbolIndex)"
+							>
+								{{ symbol }}
+							</span>
+						</span>
+					</template>
+				</div>
 
-				<transition name="fade">
-					<Message v-if="!isTestRunning && !isTestFinished" size="small"
-						>Чтобы начать, начните вводить слово
-					</Message>
-				</transition>
+				<div class="flex flex-col gap-3 items-center">
+					<InputText
+						v-model="currentEnteredWord"
+						class="w-[400px]"
+						:disabled="isTestFinished"
+						@focus="onInputFocus"
+						@keydown="onTextKeyDown"
+						@input="onTextInput"
+					/>
+
+					<Message size="small" variant="simple">Пробел - подтвердить слово</Message>
+
+					<transition name="fade">
+						<Message v-if="!isTestRunning && !isTestFinished" size="small"
+							>Чтобы начать, начните вводить слово
+						</Message>
+					</transition>
+				</div>
+
+				<TestResultModal
+					v-model:show="showResultDialog"
+					:text-id="textData.id"
+					:words="wordsArray"
+					:entered-words="enteredWordsArray"
+					:elapsed-time="passedSeconds"
+					@close="restartTest"
+					@saved="reloadProgresses"
+				/>
 			</div>
+		</div>
 
-			<TestResultModal
-				v-model:show="showResultDialog"
-				:text-id="textData.id"
-				:words="wordsArray"
-				:entered-words="enteredWordsArray"
-				:elapsed-time="passedSeconds"
-				@close="restartTest"
-			/>
+		<div class="main-block bg-primary">
+			<ProgressTable ref="progressesTableRef" :text-id="parseInt(route.params.id)" />
 		</div>
 	</main>
 </template>
@@ -115,6 +122,7 @@ import { apiGetText } from '@/api.js'
 import { useToast, ProgressSpinner, InputText, Message, RadioButton } from 'primevue'
 import TestResultModal from '@/components/TestResultModal.vue'
 import TimerStopwatch from '@/components/TimerStopwatch.vue'
+import ProgressTable from '@/components/ProgressTable.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -136,6 +144,7 @@ const optimizeStepLength = ref(150)
 const virtualScrollerRef = ref(null)
 const itemRefs = ref([])
 const timerStopwatchRef = ref(null)
+const progressesTableRef = ref(null)
 
 watchEffect(async () => {
 	isLoading.value = true
@@ -274,5 +283,9 @@ function restartTest() {
 	currentEnteredWord.value = ''
 	currentWorldIndex.value = 0
 	enteredWordsArray.value = []
+}
+
+function reloadProgresses() {
+	progressesTableRef.value.fetchProgresses()
 }
 </script>

@@ -3,7 +3,7 @@
 		v-model:visible="show"
 		header="Результаты теста"
 		modal
-		:draggable="false"
+		:draggable="true"
 		:dismissable-mask="!isLoading"
 		:closable="!isLoading"
 		@hide="$emit('close')"
@@ -97,7 +97,7 @@ import { getFormattedTime } from '@/helpers/timeHelper.js'
 import { apiSaveTestResult } from '@/api.js'
 import { useAuthStore } from '@/stores/authStore.js'
 
-defineEmits(['close'])
+const emit = defineEmits(['close', 'saved'])
 
 const props = defineProps({
 	words: {
@@ -204,6 +204,10 @@ watch(show, async (newValue) => {
 		})
 
 		savedSuccess.value = !!response?.success
+
+		if (savedSuccess.value) {
+			emit('saved')
+		}
 
 		isLoading.value = false
 	}

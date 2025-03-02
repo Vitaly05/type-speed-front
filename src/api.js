@@ -189,6 +189,18 @@ async function apiGetMyBestResult() {
 	}
 }
 
+async function apiGetTextProgresses({ textId, page = 1 }) {
+	try {
+		const response = await instance.get(
+			`text-progress/my-progresses?text_id=${textId}&page=${page}`,
+		)
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
 export {
 	apiRegister,
 	apiLoginByEmail,
@@ -202,4 +214,5 @@ export {
 	apiSaveTestResult,
 	apiGetTopRating,
 	apiGetMyBestResult,
+	apiGetTextProgresses,
 }
