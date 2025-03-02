@@ -15,7 +15,7 @@
 			</div>
 
 			<div class="account-form mt-8">
-				<Stepper value="3" class="my-10" linear>
+				<Stepper value="1" class="my-10" linear>
 					<StepList>
 						<Step value="1">Почта</Step>
 

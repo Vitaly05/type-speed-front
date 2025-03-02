@@ -170,6 +170,25 @@ const MyPreset = definePreset(Aura, {
 			steppanel: {
 				background: '{stone:700}',
 			},
+			separator: {
+				background: '{orange:200}',
+				active: {
+					background: '{orange:500}',
+				},
+			},
+			step: {
+				title: {
+					active: {
+						color: '{orange:500} !important',
+					},
+				},
+				number: {
+					color: '{orange:200} !important',
+					active: {
+						color: '{orange:400} !important',
+					},
+				},
+			},
 		},
 		datatable: {
 			header: {
