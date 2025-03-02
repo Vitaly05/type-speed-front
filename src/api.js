@@ -169,6 +169,26 @@ async function apiSaveTestResult({
 	}
 }
 
+async function apiGetTopRating({ page = 1 }) {
+	try {
+		const response = await instance.get(`text-progress/top-rating?page=${page}`)
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+async function apiGetMyBestResult() {
+	try {
+		const response = await instance.get('text-progress/my-best-result')
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
 export {
 	apiRegister,
 	apiLoginByEmail,
@@ -180,4 +200,6 @@ export {
 	apiEditText,
 	apiGetText,
 	apiSaveTestResult,
+	apiGetTopRating,
+	apiGetMyBestResult,
 }

@@ -13,7 +13,7 @@
 
 			<RouterLink :to="{ name: 'my-texts' }" class="link">Мои текста</RouterLink>
 
-			<RouterLink to="/ff" class="link">Рейтинг пользователей</RouterLink>
+			<RouterLink :to="{ name: 'rating' }" class="link">Рейтинг пользователей</RouterLink>
 		</div>
 
 		<div v-if="authStore.isAuthenticated">

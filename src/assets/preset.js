@@ -171,6 +171,16 @@ const MyPreset = definePreset(Aura, {
 				background: '{stone:700}',
 			},
 		},
+		datatable: {
+			header: {
+				cell: {
+					background: '{orange:600} !important',
+				},
+			},
+			row: {
+				background: '{stone:700}',
+			},
+		},
 	},
 })
 
