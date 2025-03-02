@@ -62,7 +62,7 @@
 					class="p-0!"
 					as="router-link"
 					variant="link"
-					:to="{ name: 'login' }"
+					:to="{ name: 'password-reset' }"
 				/>
 
 				<Button
