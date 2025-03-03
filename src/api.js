@@ -201,6 +201,45 @@ async function apiGetTextProgresses({ textId, page = 1 }) {
 	}
 }
 
+async function apiSendResetCodeRequest({ email }) {
+	try {
+		const response = await instance.post('auth/send-reset-code', {
+			email: email,
+		})
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+async function apiConfirmResetCode({ email, code }) {
+	try {
+		const response = await instance.post('auth/confirm-reset-code', {
+			email: email,
+			code: code,
+		})
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
+async function apiResetPassword({ email, code, newPassword }) {
+	try {
+		const response = await instance.post('auth/reset-password', {
+			email: email,
+			code: code,
+			password: newPassword,
+		})
+
+		return response.data
+	} catch (e) {
+		console.error(e.message)
+	}
+}
+
 export {
 	apiRegister,
 	apiLoginByEmail,
@@ -215,4 +254,7 @@ export {
 	apiGetTopRating,
 	apiGetMyBestResult,
 	apiGetTextProgresses,
+	apiSendResetCodeRequest,
+	apiConfirmResetCode,
+	apiResetPassword,
 }

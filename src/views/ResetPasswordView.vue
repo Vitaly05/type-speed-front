@@ -165,9 +165,15 @@ import {
 	StepPanels,
 	StepPanel,
 	InputOtp,
+	useToast,
 } from 'primevue'
 import { reactive, ref, watch } from 'vue'
 import { validateEmail, validatePassword } from '@/helpers/validationHelper.js'
+import { apiConfirmResetCode, apiResetPassword, apiSendResetCodeRequest } from '@/api.js'
+import { useRouter } from 'vue-router'
+
+const toast = useToast()
+const router = useRouter()
 
 const validation = reactive({
 	email: {
@@ -232,22 +238,53 @@ watch(password, (newValue) => {
 async function onFirstStepEnd(callback) {
 	isLoading.firstStep = true
 
+	const response = await apiSendResetCodeRequest({ email: email.value })
+
 	isLoading.firstStep = false
 
-	callback()
+	handleResponse(response, callback)
 }
 
 async function onSecondStepEnd(callback) {
 	isLoading.secondStep = true
 
+	const response = await apiConfirmResetCode({ email: email.value, code: code.value })
+
 	isLoading.secondStep = false
 
-	callback()
+	handleResponse(response, callback, 'Неверный код')
 }
 
 async function resetPassword() {
 	isLoading.thirdStep = true
 
+	const response = await apiResetPassword({
+		email: email.value,
+		code: code.value,
+		newPassword: password.value,
+	})
+
 	isLoading.thirdStep = false
+
+	handleResponse(response, () => {
+		router.push({ name: 'login' })
+		toast.add({
+			summary: 'Пароль успешно сброшен. Теперь вы можете войти в аккаунт с новым паролем',
+			severity: 'success',
+			life: 5000,
+		})
+	})
+}
+
+function handleResponse(response, callback, message = null) {
+	if (response?.success) {
+		callback()
+	} else {
+		toast.add({
+			summary: message ?? 'Произошла ошибка, проверьте данные и попробуйте снова',
+			severity: 'error',
+			life: 5000,
+		})
+	}
 }
 </script>
