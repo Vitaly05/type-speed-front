@@ -2,10 +2,20 @@
 	<header
 		class="container bg-primary p-8 flex justify-between items-center border-b border-orange-50"
 	>
-		<div>
+		<div class="flex gap-4 items-center">
 			<RouterLink to="/">
 				<LogoIcon />
 			</RouterLink>
+
+			<Button
+				icon="pi pi-info-circle"
+				aria-label="Информация о программе"
+				title="Информация о программе"
+				variant="text"
+				as="router-link"
+				:to="{ name: 'info' }"
+				rounded
+			/>
 		</div>
 
 		<div class="flex gap-4">

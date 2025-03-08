@@ -92,6 +92,17 @@ const MyPreset = definePreset(Aura, {
 							color: '{orange:600}',
 						},
 					},
+					text: {
+						primary: {
+							color: '{orange:400}',
+							hover: {
+								background: '{stone:700}',
+							},
+							active: {
+								background: '{stone:600}',
+							},
+						}
+					},
 				},
 			},
 		},

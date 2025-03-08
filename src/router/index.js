@@ -45,6 +45,11 @@ const router = createRouter({
 			component: () => import('../views/RatingView.vue'),
 		},
 		{
+			path: '/info',
+			name: 'info',
+			component: () => import('../views/ProgramInformationView.vue'),
+		},
+		{
 			path: '/:pathMatch(.*)*',
 			name: '404',
 			component: () => import('../views/NotFoundView.vue'),
