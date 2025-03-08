@@ -1,7 +1,7 @@
 <template>
 	<div class="flex justify-center items-center h-dvh">
 		<div class="account-form-card relative w-150!">
-			<h1 class="text-2xl text-center">Type Speed - Сброс пароля</h1>
+			<h1 class="text-2xl text-center">Скорость печати - Сброс пароля</h1>
 
 			<div class="absolute right-2 top-2">
 				<Button
