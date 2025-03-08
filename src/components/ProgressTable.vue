@@ -97,6 +97,8 @@ async function fetchProgresses() {
 	if (result.data?.length === 0) {
 		showNoProgressMessage.value = true
 	} else {
+		showNoProgressMessage.value = false
+
 		progresses.value = result
 	}
 
