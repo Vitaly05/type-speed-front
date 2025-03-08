@@ -8,6 +8,7 @@
 
 			<Form
 				v-slot="$form"
+				ref="formRef"
 				:validate-on-value-update="true"
 				:validate-on-blur="true"
 				:validate-on-submit="true"
@@ -43,7 +44,22 @@
 					</StepPanel>
 
 					<StepPanel v-slot="{ activateCallback }" value="2">
-						<div class="flex flex-col gap-10">
+						<div class="flex flex-col gap-5">
+							<FileUpload
+								class="flex"
+								mode="basic"
+								accept=".txt"
+								choose-label="Выбрать файл"
+								custom-upload
+								@select="onFileSelect"
+							>
+								<template #filelabel>
+									<span></span>
+								</template>
+							</FileUpload>
+
+							<span class="text-center text-xl">Или</span>
+
 							<div class="flex flex-col gap-1">
 								<FloatLabel variant="on">
 									<Textarea
@@ -106,6 +122,7 @@ import {
 	StepPanels,
 	Stepper,
 	Textarea,
+	FileUpload,
 	useToast,
 } from 'primevue'
 import { Form } from '@primevue/forms'
@@ -129,6 +146,8 @@ const emit = defineEmits(['save'])
 const show = defineModel({ type: Boolean, default: false })
 
 const toast = useToast()
+
+const formRef = ref(null)
 
 const isLoading = ref(false)
 const textareaTextValue = ref('')
@@ -173,6 +192,25 @@ function onTextInput() {
 		textareaTextValue.value = textareaTextValue.value.replace(textTextInvalidSymbolsRegex, '')
 		textareaTextValue.value = textareaTextValue.value.replace(/\s{2,}/g, ' ')
 	}
+}
+
+function onFileSelect(e) {
+	const file = e.files[0]
+
+	const reader = new FileReader()
+
+	reader.onload = async (e) => {
+		const text = e.target.result
+		const formattedText = text
+			.trim()
+			.replace(textTextInvalidSymbolsRegex, '')
+			.replace(/\s{2,}/g, ' ')
+
+		textareaTextValue.value = formattedText
+		formRef.value.states.text.value = formattedText
+	}
+
+	reader.readAsText(file)
 }
 
 async function onEditModalFormSubmit(form) {
